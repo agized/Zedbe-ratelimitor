@@ -1,0 +1,14 @@
+# Step 1: Use the official OpenJDK 21 slim image as the base image
+FROM openjdk:21-slim
+
+# Step 2: Set the working directory in the container to /app
+WORKDIR /app
+
+# Step 3: Copy the JAR file from your local machine to the container
+COPY target/RateLimitingApp-1.0-SNAPSHOT.jar app.jar
+
+# Step 4: Expose port 8080 (or any other port your Spring Boot app uses)
+EXPOSE 8080
+
+# Step 5: Command to run the JAR file
+ENTRYPOINT ["java", "-jar", "app.jar"]

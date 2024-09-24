@@ -1,61 +1,40 @@
 package com.rateLimiter.service;
 
-import com.rateLimiter.model.OtpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class RateLimitingService {
 
     @Autowired
-    private S3Service s3Service;
-    @Autowired
-    private CloudWatchLogsService cloudWatchLogsService;
+    private StringRedisTemplate redisTemplate;
 
-    private final String bucketName = "testratelimitng";
-    private final String blockedCarriersKey = "blocked_carriers.txt";
-    private final String blockedCountriesKey = "blocked_countries.txt";
+    @Value("${rate.limit.requests}")
+    private int requestLimit;
 
-    // Process the OTP request and determine if it should be blocked
-    public boolean processOtpRequest(OtpRequest otpRequest, Map<String, String> headers) {
+    @Value("${rate.limit.timewindow}")
+    private int timeWindowSeconds;
 
-        String carrier = headers.get("getcarrier");
-        String countryCode = otpRequest.getMobile().substring(0, 3);
-        List<String> blockedCarriers = s3Service.getBlockedCarriers(bucketName, blockedCarriersKey);
-        List<String> blockedCountries = s3Service.getBlockedCountries(bucketName, blockedCountriesKey);
+    public boolean isAllowed(String phoneNumber) {
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
-        // Check if the carrier or country is blocked
-        if (blockedCarriers.contains(carrier) || blockedCountries.contains(countryCode)) {
-            publishAction("BLOCKED", otpRequest, headers, countryCode);
-            return true;
+        // Redis key for rate limiting
+        String redisKey = "rate_limit_" + phoneNumber;
+
+        // Increment request count and set TTL if the key does not exist
+        Long requestCount = ops.increment(redisKey);
+
+        // If this is the first request, set the expiration time to 60 seconds
+        if (requestCount == 1) {
+            redisTemplate.expire(redisKey, timeWindowSeconds, TimeUnit.SECONDS);
         }
 
-        publishAction("ALLOWED", otpRequest, headers,countryCode);
-        return false;
-    }
-
-    private void publishAction(String action, OtpRequest otpRequest, Map<String, String> headers, String countryCode) {
-        String requestDetails = String.format("Mobile: %s, UserType: %d", otpRequest.getMobile(), otpRequest.getUserType());
-
-        // Build the headers string
-        StringBuilder headersBuilder = new StringBuilder();
-        headers.forEach((key, value) -> headersBuilder.append(key).append(": ").append(value).append(", "));
-
-        // Log the action with full request details and headers
-        String logMessage = String.format(
-                "Action: %s, Request: [%s], Headers: [%s], Country: %s",
-                action,
-                requestDetails,
-                headersBuilder.toString(),
-                countryCode
-        );
-
-        // Log to CloudWatch
-        cloudWatchLogsService.logAction(logMessage);
-        System.out.println(action + " action for mobile: " + otpRequest.getMobile() + " and carrier: " + headers.get("getcarrier"));
+        // Check if the request count has exceeded the limit
+        return requestCount <= requestLimit;
     }
 }
