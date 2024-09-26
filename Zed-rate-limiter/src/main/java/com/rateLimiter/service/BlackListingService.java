@@ -16,7 +16,7 @@ public class BlackListingService {
     @Autowired
     private CloudWatchLogsService cloudWatchLogsService;
 
-    private final String bucketName = "testratelimitng";
+    private final String bucketName = "zed-rate-limiting-dev";
     private final String blockedCarriersKey = "blocked_carriers.txt";
     private final String blockedCountriesKey = "blocked_countries.txt";
 
