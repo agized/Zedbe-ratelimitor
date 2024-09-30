@@ -21,7 +21,7 @@ public class CloudWatchLogsService {
     @Autowired
     private CloudWatchLogsClient cloudWatchLogsClient;
 
-    private final String logGroupName = "Zed-RateLimiting";  // Specify your log group name here
+    private final String logGroupName = "Zedbe-ratelimiting-logs";  // Specify your log group name here
     private final String logStreamName = "/zed/ratelimitingaction";            // Specify your log stream name here
 
     public void logAction(String message) {
