@@ -29,7 +29,7 @@ public class RateLimitingController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Carrier or country is blocked");
         }
 
-        boolean isRateLimitExceeded = !rateLimitingService.isAllowed(otpRequest.getMobile());
+       // boolean isRateLimitExceeded = !rateLimitingService.isAllowed(otpRequest.getMobile());
 
         // if (isRateLimitExceeded) {
         //     // Return 429 Too Many Requests if the rate limit is exceeded
