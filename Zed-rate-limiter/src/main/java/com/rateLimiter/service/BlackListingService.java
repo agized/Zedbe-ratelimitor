@@ -2,6 +2,7 @@ package com.rateLimiter.service;
 
 import com.rateLimiter.model.OtpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -16,7 +17,10 @@ public class BlackListingService {
     @Autowired
     private CloudWatchLogsService cloudWatchLogsService;
 
-    private final String bucketName = "zed-rate-limiting-dev";
+    @Value("${aws.bucket}")
+    private String bucketName;
+
+
     private final String blockedCarriersKey = "blocked_carriers.txt";
     private final String blockedCountriesKey = "blocked_countries.txt";
 
