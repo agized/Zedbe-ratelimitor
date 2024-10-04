@@ -17,7 +17,7 @@ public class BlackListingService {
     @Autowired
     private CloudWatchLogsService cloudWatchLogsService;
 
-    @Value("${aws.bucket}")
+    @Value("${aws.s3.bucket}")
     private String bucketName;
 
 
