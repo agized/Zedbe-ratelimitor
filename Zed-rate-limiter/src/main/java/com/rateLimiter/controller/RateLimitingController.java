@@ -31,10 +31,10 @@ public class RateLimitingController {
 
         boolean isRateLimitExceeded = !rateLimitingService.isAllowed(otpRequest.getMobile());
 
-        if (isRateLimitExceeded) {
-            // Return 429 Too Many Requests if the rate limit is exceeded
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
-        }
+        // if (isRateLimitExceeded) {
+        //     // Return 429 Too Many Requests if the rate limit is exceeded
+        //     return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
+        // }
         return ResponseEntity.ok("OTP Sent");
     }
 
