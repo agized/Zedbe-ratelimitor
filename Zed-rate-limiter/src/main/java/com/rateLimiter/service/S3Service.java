@@ -1,6 +1,7 @@
 package com.rateLimiter.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
@@ -18,12 +19,6 @@ public class S3Service {
     private S3Client s3Client;
 
 
-
-    public S3Service() {
-        this.s3Client = S3Client.builder()
-                .region(software.amazon.awssdk.regions.Region.of("me-central-1")) // Set the region here
-                .build();
-    }
 
     // Fetch the blocked carriers from S3
     public List<String> getBlockedCarriers(String bucketName, String key) {

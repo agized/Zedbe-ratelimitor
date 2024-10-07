@@ -20,10 +20,14 @@ public class BlackListingService {
     @Value("${aws.s3.bucket}")
     private String bucketName;
 
+    @Value("${aws.region}")
+    private String region;
+
 
     // Process the OTP request and determine if it should be blocked
     public boolean processOtpRequest(OtpRequest otpRequest, Map<String, String> headers) {
 
+        System.out.println(region);
         String carrier = headers.get("getcarrier");
         String countryCode = otpRequest.getMobile().substring(0, 3);
         String blockedCarriersKey = "blocked_carriers.txt";
