@@ -17,6 +17,14 @@ public class S3Service {
     @Autowired
     private S3Client s3Client;
 
+
+
+    public S3Service() {
+        this.s3Client = S3Client.builder()
+                .region(software.amazon.awssdk.regions.Region.of("me-central-1")) // Set the region here
+                .build();
+    }
+
     // Fetch the blocked carriers from S3
     public List<String> getBlockedCarriers(String bucketName, String key) {
         return fetchListFromS3(bucketName, key);

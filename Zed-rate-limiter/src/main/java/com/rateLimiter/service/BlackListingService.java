@@ -21,15 +21,14 @@ public class BlackListingService {
     private String bucketName;
 
 
-    private final String blockedCarriersKey = "blocked_carriers.txt";
-    private final String blockedCountriesKey = "blocked_countries.txt";
-
     // Process the OTP request and determine if it should be blocked
     public boolean processOtpRequest(OtpRequest otpRequest, Map<String, String> headers) {
 
         String carrier = headers.get("getcarrier");
         String countryCode = otpRequest.getMobile().substring(0, 3);
+        String blockedCarriersKey = "blocked_carriers.txt";
         List<String> blockedCarriers = s3Service.getBlockedCarriers(bucketName, blockedCarriersKey);
+        String blockedCountriesKey = "blocked_countries.txt";
         List<String> blockedCountries = s3Service.getBlockedCountries(bucketName, blockedCountriesKey);
 
         // Check if the carrier or country is blocked
