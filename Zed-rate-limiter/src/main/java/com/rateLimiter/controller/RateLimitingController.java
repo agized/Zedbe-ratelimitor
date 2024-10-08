@@ -29,13 +29,13 @@ public class RateLimitingController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Carrier or country is blocked");
         }
 
-       // boolean isRateLimitExceeded = !rateLimitingService.isAllowed(otpRequest.getMobile());
-
-        // if (isRateLimitExceeded) {
-        //     // Return 429 Too Many Requests if the rate limit is exceeded
-        //     return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
-        // }
-        return ResponseEntity.ok("OTP Sent");
+//        boolean isRateLimitExceeded = !rateLimitingService.isAllowed(otpRequest.getMobile());
+//
+//         if (isRateLimitExceeded) {
+//             // Return 429 Too Many Requests if the rate limit is exceeded
+//             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
+//         }
+       return ResponseEntity.ok("OTP Sent");
     }
 
     @GetMapping("/ping")
