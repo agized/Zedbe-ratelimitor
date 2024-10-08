@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/verify")
 public class RateLimitingController {
 
     @Autowired
@@ -20,7 +20,7 @@ public class RateLimitingController {
     @Autowired
     private RateLimitingService rateLimitingService;
 
-    @PostMapping("/verify")
+    @PostMapping("/user")
     public ResponseEntity<String> sendOtp(@RequestBody OtpRequest otpRequest, @RequestHeader Map<String, String> headers) {
 
         boolean isBlocked = blackListingService.processOtpRequest(otpRequest, headers);
@@ -29,13 +29,13 @@ public class RateLimitingController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Carrier or country is blocked");
         }
 
-        boolean isRateLimitExceeded = !rateLimitingService.isAllowed(otpRequest.getMobile());
-
-        // if (isRateLimitExceeded) {
-        //     // Return 429 Too Many Requests if the rate limit is exceeded
-        //     return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
-        // }
-        return ResponseEntity.ok("OTP Sent");
+//        boolean isRateLimitExceeded = !rateLimitingService.isAllowed(otpRequest.getMobile());
+//
+//         if (isRateLimitExceeded) {
+//             // Return 429 Too Many Requests if the rate limit is exceeded
+//             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
+//         }
+       return ResponseEntity.ok("OTP Sent");
     }
 
     @GetMapping("/ping")

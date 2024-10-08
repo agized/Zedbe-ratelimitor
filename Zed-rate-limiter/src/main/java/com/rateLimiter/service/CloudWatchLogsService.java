@@ -27,10 +27,10 @@ public class CloudWatchLogsService {
     public void logAction(String message) {
         try {
             // Ensure the log group exists, create if necessary
-            createLogGroupIfNotExists();
+            //createLogGroupIfNotExists();
 
             // Ensure the log stream exists, create if necessary
-            createLogStreamIfNotExists();
+            //createLogStreamIfNotExists();
 
             // Log the message
             logMessageToCloudWatch(message);
