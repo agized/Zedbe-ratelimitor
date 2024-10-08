@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/verify")
 public class RateLimitingController {
 
     @Autowired
@@ -20,7 +20,7 @@ public class RateLimitingController {
     @Autowired
     private RateLimitingService rateLimitingService;
 
-    @PostMapping("/verify")
+    @PostMapping("/user")
     public ResponseEntity<String> sendOtp(@RequestBody OtpRequest otpRequest, @RequestHeader Map<String, String> headers) {
 
         boolean isBlocked = blackListingService.processOtpRequest(otpRequest, headers);
