@@ -39,31 +39,37 @@ public class BlackListingService {
 
         List<String> blockedCarriers = Arrays.asList("KIYVSTAR");
         List<String> blockedCountries = Arrays.asList("+374", "+52","","+54","+504","+374","+381");
+        boolean isCountryBlocked= false;
+        boolean isCarrierBlocked= false;
+
 
         // Check if the carrier or country is blocked
         if (blockedCarriers.contains(carrier)) {
-            publishAction("BLOCKED", otpRequest, headers, "Carrier Blocked");
+            isCarrierBlocked = true;
+            publishAction("BLOCKED", otpRequest, headers, "Carrier Blocked",isCarrierBlocked, isCountryBlocked);
             return true;
         }
 
         // Check if countryCode is blocked
         if (blockedCountries.contains(countryCode)) {
-            publishAction("BLOCKED", otpRequest, headers, countryCode);
+            isCountryBlocked =true;
+            publishAction("BLOCKED", otpRequest, headers, countryCode,isCarrierBlocked, isCountryBlocked);
             return true;
         }
 
         // Check if countryCode2 is blocked
         if (blockedCountries.contains(countryCode2)) {
-            publishAction("BLOCKED", otpRequest, headers, countryCode2);
+            isCountryBlocked =true;
+            publishAction("BLOCKED", otpRequest, headers, countryCode2,isCarrierBlocked, isCountryBlocked);
             return true;
         }
 
         // If none are blocked
-        publishAction("ALLOWED", otpRequest, headers, countryCode);
+        publishAction("ALLOWED", otpRequest, headers, countryCode,isCarrierBlocked,isCountryBlocked);
         return false;
     }
 
-    private void publishAction(String action, OtpRequest otpRequest, Map<String, String> headers, String countryCode) {
+    private void publishAction(String action, OtpRequest otpRequest, Map<String, String> headers, String countryCode, boolean isCarrierBlocked,boolean isCountryBlocked) {
         String requestDetails = String.format("Mobile: %s, UserType: %d", otpRequest.getMobile(), otpRequest.getUserType());
 
         // Build the headers string
@@ -78,6 +84,14 @@ public class BlackListingService {
                 headersBuilder.toString(),
                 countryCode
         );
+
+        if ("BLOCKED".equals(action)) {
+            if (isCountryBlocked) {
+                logMessage += ", Reason: Country is blocked";
+            } else if (isCarrierBlocked) {
+                logMessage += ", Reason: Carrier is blocked";
+            }
+        }
 
         // Log to CloudWatch
         cloudWatchLogsService.logAction(logMessage);
