@@ -38,7 +38,7 @@ public class BlackListingService {
 //        List<String> blockedCountries = s3Service.getBlockedCountries(bucketName, blockedCountriesKey);
 
         List<String> blockedCarriers = Arrays.asList("KIYVSTAR");
-        List<String> blockedCountries = Arrays.asList("+374", "+52","","+54","+504","+374","+381");
+        List<String> blockedCountries = Arrays.asList("+374", "+52","","+54","+504","+374","+381","+966","+63");
         boolean isCountryBlocked= false;
         boolean isCarrierBlocked= false;
 
